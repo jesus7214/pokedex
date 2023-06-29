@@ -1,0 +1,30 @@
+body {
+  background-image: url(img/p3.jpg);
+}
+#titulo{
+  color: yellow;
+  text-align: center;
+  text-shadow: 4px 5px 14px rgb(41, 186, 235);
+}
+.pokemon-name, .pokemonType{
+    color: cyan;
+    
+}
+
+
+.card{
+    margin: auto;
+    width: 70%;
+    background-color: yellowgreen;
+    
+}
+
+.card-body{
+  background-color: yellowgreen;
+}
+
+#app{
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+}
