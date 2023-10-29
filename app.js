@@ -1,50 +1,47 @@
 const url = "https://pokeapi.co/api/v2/pokemon/";
 const pokemon = document.getElementById("pokeName");
-const buttonSearchh = document.getElementById("searchPokemon");
+const buttonSearch = document.getElementById("searchPokemon");
 const appNode = document.getElementById("app");
-const removePokemon= document.getElementById('borrarPokemon')
+const removePokemon = document.getElementById('borrarPokemon');
 
-buttonSearchh.addEventListener("click", insertarPokemon); // esta funcion: insertarPokemon() VA SIN PARENTESIS poruq está dentro de un evento addeventlitsener
-removePokemon.addEventListener("click",borrarPokemon ) // esta funcion: borrarPokemon() VA SIN PARENTESIS poruq está dentro de un evento addeventlitsener
+buttonSearch.addEventListener("click", insertarPokemon);
+removePokemon.addEventListener("click", borrarPokemon);
 
 function insertarPokemon() {
-  window
-    .fetch(`${url}${pokemon.value.toLowerCase()}`)
-    .then( res => res.json())
-    .then(data => {
-      const allItems = [];
-      const result = [];
+  // Clear the previous Pokémon data before adding a new one
+  appNode.innerHTML = '';
 
-      for (let pokemonInfo in data) {
-        result.push([pokemonInfo, data[pokemonInfo]]);
-      }
-      console.table(result)
+  const pokemonName = pokemon.value.toLowerCase();
+  
+  if (pokemonName) {
+    fetch(`${url}${pokemonName}`)
+      .then(res => res.json())
+      .then(data => {
+        const pokeImagen = document.createElement('img');
+        pokeImagen.src = data.sprites.front_default;
 
-      const pokeImagen= document.createElement('img')
-      pokeImagen.src= result[14][1].front_default
-     
+        const pokemonNameElement = document.createElement('h3');
+        pokemonNameElement.innerHTML = `Name: ${data.name} <br> id: ${data.id}`;
+        pokemonNameElement.classList.add('pokemon-name');
 
-      const pokemonName = document.createElement('h3')
-      pokemonName.innerHTML= `Name: ${result[10][1]} <br> id: ${result[6][1]}`
-      pokemonName.classList.add('pokemon-name'); // se crea la clase para darle estilo en css, porque como se creó **pokemonName = document.createElement** no existe en HTML
+        const types = data.types.map(type => type.type.name);
+        const pokemonType = document.createElement('h3');
+        pokemonType.innerText = `Type: ${types.join(', ')}`;
+        pokemonType.classList.add('pokemonType');
 
-      const pokemonType = document.createElement('h3')
-      pokemonType.innerText= `Type: ${result[16][1][0].type.name}`
-      pokemonType.classList.add('pokemonType');
+        const container = document.createElement('div');
+        container.append(pokeImagen, pokemonNameElement, pokemonType);
 
-      const contenedor= document.createElement('div')
-      contenedor.append(pokeImagen,pokemonName,pokemonType)
-
-      allItems.push(contenedor)
-      appNode.append(...allItems)
-    });
+        appNode.appendChild(container);
+      })
+      .catch(error => {
+        console.error('Error fetching Pokémon data:', error);
+      });
+  } else {
+    alert('Please enter a Pokémon name or ID.');
+  }
 }
 
-function borrarPokemon(){
-let allPokemoss= appNode.childNodes
- allPokemoss = Array.from(allPokemoss)// el from es para crear objetos iterables y asi recorrerlos mediante forEach
-
- allPokemoss.forEach(pokemon => {
-  pokemon.remove(pokemon)
- })
+function borrarPokemon() {
+  appNode.innerHTML = ''; // Clear all Pokémon data from the appNode
 }
